@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Patient Form</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<script th:src="@{/js/i18n.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+</head>
+
+<body data-theme="light">
+	<div class="app-shell">
+
+		<div th:replace="sidebar :: sidebar"></div>
+
+		<main class="main-wrap">
+			<div class="top-card" style="justify-content:flex-end;">
+				<form th:action="@{/logout}" method="post">
+					<input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+					<button class="logout-btn" type="submit">Logout</button>
+				</form>
+			</div>
+
+			<section class="card">
+				<h3 class="card-title">Create Patient</h3>
+				<p class="card-sub">Fill patient information</p>
+
+				<form method="post" th:action="@{/patients}" th:object="${patient}" style="margin-top:18px;">
+					<input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+
+					<div class="form-grid">
+						<div class="field">
+							<label>Patient Code</label>
+							<input type="text" th:field="*{patientCode}" readonly>
+						</div>
+
+						<div class="field">
+							<label>Full Name</label>
+							<input type="text" th:field="*{fullName}" required>
+						</div>
+
+						<div class="field">
+							<label>Phone Number</label>
+							<input type="text" th:field="*{phoneNumber}" placeholder="968XXXXXXXX">
+						</div>
+
+						<div class="field">
+							<label>Gender</label>
+							<select th:field="*{gender}" required>
+								<option value="">Select</option>
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+							</select>
+						</div>
+
+						<div class="field">
+							<label>Age</label>
+							<input type="number" min="0" max="120" th:field="*{age}" required>
+						</div>
+					</div>
+
+					<div class="action-row" style="margin-top:18px;">
+						<button class="btn primary" type="submit">Save</button>
+						<a class="btn" href="/patients">Back</a>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

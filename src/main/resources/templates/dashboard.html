@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <script th:src="@{/js/i18n.js}"></script>
+  <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+
+  <div th:replace="sidebar :: sidebar"></div>
+
+  <main class="main-wrap">
+
+    <div class="topbar">
+      <div class="topbar-search">
+        <input type="text" placeholder="Search..." data-i18n-placeholder="search">
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-profile">
+          <div class="profile-avatar">👩‍⚕️</div>
+          <div class="profile-text">
+            <strong th:text="${currentUsername}">User</strong>
+            <span th:text="${currentRole}">Role</span>
+          </div>
+        </div>
+
+        <form th:action="@{/logout}" method="post">
+          <input type="hidden"
+                 th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                 th:value="${_csrf != null ? _csrf.token : ''}">
+          <button class="logout-btn" type="submit" data-i18n="logout">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="hero-card hero-card-large">
+      <div class="hero-content">
+        <div class="hero-title" data-i18n="dashboardTitle">Emergency Triage Dashboard</div>
+        <div class="hero-sub" data-i18n="dashboardSubtitle">Your health is our priority, every moment, every day.</div>
+
+        <div class="hero-actions">
+          <a class="btn primary" th:href="@{/patients/new}" data-i18n="newPatient">New Patient</a>
+          <a class="btn" th:href="@{/queue}" data-i18n="openQueue">Open Queue</a>
+
+          <a class="btn"
+             th:if="${#strings.equalsIgnoreCase(currentRole,'NURSE')}"
+             th:href="@{/reports}">
+             Reports
+          </a>
+
+          <a class="btn"
+             th:if="${#strings.equalsIgnoreCase(currentRole,'DOCTOR')}"
+             th:href="@{/doctor-reports}">
+             Doctor Reports
+          </a>
+
+          <a class="btn"
+             th:if="${#strings.equalsIgnoreCase(currentRole,'ADMIN')}"
+             th:href="@{/users}">
+             Users
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-box">
+          <div class="hero-icon">🩺</div>
+          <div class="hero-mini-text">Live patient monitoring</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-grid">
+      <section class="stat-card">
+        <div class="stat-number" th:text="${totalPatients}">0</div>
+        <div class="stat-label">Total Patients</div>
+      </section>
+
+      <section class="stat-card">
+        <div class="stat-number" th:text="${redCount}">0</div>
+        <div class="stat-label">Critical Cases</div>
+      </section>
+
+      <section class="stat-card">
+        <div class="stat-number" th:text="${yellowCount}">0</div>
+        <div class="stat-label">Urgent Cases</div>
+      </section>
+
+      <section class="stat-card">
+        <div class="stat-number" th:text="${greenCount}">0</div>
+        <div class="stat-label">Normal Cases</div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h3 class="card-title">Category Summary</h3>
+      <div class="category-badges">
+        <span class="badge red">RED:<span th:text="${redCount}">0</span></span>
+        <span class="badge yellow">YELLOW:<span th:text="${yellowCount}">0</span></span>
+        <span class="badge green">GREEN:<span th:text="${greenCount}">0</span></span>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:24px;">
+      <h3 class="card-title">Recent Triage</h3>
+      <p class="card-sub">Latest triage records in the system</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Category</th>
+            <th>Time</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="t : ${recentTriage}">
+            <td th:text="${t.id}">1</td>
+            <td th:text="${t.patient != null ? t.patient.fullName : '-'}">Patient</td>
+            <td>
+              <span th:if="${#strings.equalsIgnoreCase(t.category,'RED')}" class="badge red">RED</span>
+              <span th:if="${#strings.equalsIgnoreCase(t.category,'YELLOW')}" class="badge yellow">YELLOW</span>
+              <span th:if="${#strings.equalsIgnoreCase(t.category,'GREEN')}" class="badge green">GREEN</span>
+              <span th:if="${t.category == null or t.category == ''}" class="badge">-</span>
+            </td>
+            <td th:text="${t.triageTime}">Time</td>
+          </tr>
+
+          <tr th:if="${#lists.isEmpty(recentTriage)}">
+            <td colspan="4" class="empty">No triage records found.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

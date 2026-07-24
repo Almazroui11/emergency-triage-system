@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Reports</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+        <div class="top-card" style="justify-content:flex-end;">
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden"
+                       th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        </div>
+
+        <section class="card">
+            <h3 class="card-title">Nurses Reports</h3>
+            <p class="card-sub"></p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="r : ${reports}">
+                        <tr>
+                            <td th:text="${r.id}">1</td>
+                            <td th:text="${r.patient != null ? r.patient.fullName : 'N/A'}">Patient</td>
+                            <td>
+                                <button type="button" class="btn primary" th:attr="data-target='report-' + ${r.id}" onclick="toggleReport(this)">
+                                    View Report
+                                </button>
+                            </td>
+                        </tr>
+                        <tr th:attr="id='report-' + ${r.id}" style="display:none;">
+                            <td colspan="3">
+                                <div class="report-details-content doctor-report-content" th:utext="${r.content}">Report content</div>
+                            </td>
+                        </tr>
+                    </th:block>
+
+                    <tr th:if="${#lists.isEmpty(reports)}">
+                        <td colspan="3" class="empty">No reports found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    function toggleReport(button) {
+        const targetId = button.getAttribute('data-target');
+        const row = document.getElementById(targetId);
+        if (!row) return;
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    }
+</script>
+</body>
+</html>

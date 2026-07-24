@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+        <div class="top-card">
+			<div class="top-card-left">
+			    <div class="top-text">
+			        <h1>Patients</h1>
+			        <p></p>
+			    </div>
+			</div>  
+
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit" data-i18n="logout">Logout</button>
+            </form>
+        </div>
+
+        <div class="grid-2">
+            <section class="card">
+                <h3 class="card-title" data-i18n="interface">Interface</h3>
+                <p class="card-sub">Language and theme</p>
+
+                <div class="form-grid" style="margin-top:18px;">
+                    <div class="field">
+                        <label for="language" data-i18n="language">Language</label>
+                        <select id="language">
+                            <option value="English">English</option>
+                            <option value="Arabic">Arabic</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="theme" data-i18n="theme">Theme</label>
+                        <select id="theme">
+                            <option value="Light" data-i18n="light">Light</option>
+                            <option value="Dark" data-i18n="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-row" style="margin-top:18px;">
+                    <button class="btn primary" id="saveSettings" type="button" data-i18n="save">Save</button>
+                    <a class="btn" href="/dashboard" data-i18n="back">Back</a>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3 class="card-title" data-i18n="export">Export</h3>
+                <p class="card-sub" data-i18n="patientsData">Patients data</p>
+
+                <p style="margin-top:22px;color:var(--muted);font-size:18px;">
+                    Download patients list from the system as CSV file.
+                </p>
+
+                <div class="action-row" style="margin-top:24px;">
+                    <a class="btn" th:href="@{/export/patients.csv}" data-i18n="exportCsv">Export CSV</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Details</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+        <div class="top-card" style="justify-content:flex-end;">
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        </div>
+
+        <div class="grid-2">
+            <section class="card">
+                <h3 class="card-title">Patient Details</h3>
+                <p class="card-sub" th:text="${patient.patientCode}">P-001</p>
+
+                <div class="form-grid" style="margin-top:18px;">
+                    <div class="field">
+                        <label>Full Name</label>
+                        <input type="text" th:value="${patient.fullName}" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Gender</label>
+                        <input type="text" th:value="${patient.gender}" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Age</label>
+                        <input type="text" th:value="${patient.age}" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Status</label>
+                        <input type="text" th:value="${patient.status}" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Category</label>
+                        <input type="text" th:value="${patient.category}" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Arrival Time</label>
+                        <input type="text" th:value="${patient.arrivalTime}" readonly>
+                    </div>
+
+                    <div class="field full">
+                        <label>Complaint</label>
+                        <textarea readonly th:text="${patient.complaint}"></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label>Symptoms</label>
+                        <textarea readonly th:text="${patient.symptoms}"></textarea>
+                    </div>
+                </div>
+
+                <div class="action-row" style="margin-top:18px;">
+                    <a class="btn primary" th:href="@{'/triage/' + ${patient.id}}">Triage</a>
+                    <a class="btn" href="/patients">Back</a>
+                    <a class="btn" href="/reports">Reports</a>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3 class="card-title">Clinical Alert</h3>
+                <p class="card-sub">Category</p>
+
+                <div th:if="${#strings.equalsIgnoreCase(patient.category,'RED')}" class="rule-box red-box">
+                    CRITICAL CASE (RED) - Immediate attention required
+                </div>
+
+                <div th:if="${#strings.equalsIgnoreCase(patient.category,'YELLOW')}" class="rule-box yellow-box">
+                    URGENT CASE (YELLOW) - Patient should be reviewed soon
+                </div>
+
+                <div th:if="${#strings.equalsIgnoreCase(patient.category,'GREEN') or patient.category == null}" class="rule-box green-box">
+                    Stable case - standard monitoring
+                </div>
+
+                <p class="note-text">Use Triage to update category and push patient to the waiting queue.</p>
+            </section>
+        </div>
+
+        <section class="card" style="margin-top:24px;">
+            <h3 class="card-title">Patient History</h3>
+            <p class="card-sub">Triage records and saved reports</p>
+
+            <div class="history-timeline" th:if="${(triageRecords != null and !#lists.isEmpty(triageRecords)) or (patientReports != null and !#lists.isEmpty(patientReports))}">
+                <div class="timeline-item" th:each="t : ${triageRecords}">
+                    <div class="timeline-dot triage-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-head">
+                            <h4>Triage Record</h4>
+                            <span th:text="${t.triageTime}">time</span>
+                        </div>
+                        <div class="timeline-meta">
+                            <span th:if="${#strings.equalsIgnoreCase(t.category,'RED')}" class="badge red">RED</span>
+                            <span th:if="${#strings.equalsIgnoreCase(t.category,'YELLOW')}" class="badge yellow">YELLOW</span>
+                            <span th:if="${#strings.equalsIgnoreCase(t.category,'GREEN')}" class="badge green">GREEN</span>
+                        </div>
+                        <p><strong>Reason:</strong> <span th:text="${t.triageReason}">reason</span></p>
+                        <p><strong>Notes:</strong> <span th:text="${t.triageNotes}">notes</span></p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" th:each="r : ${patientReports}">
+                    <div class="timeline-dot report-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-head">
+                            <h4>Saved Report</h4>
+                            <span th:text="${r.createdAt}">time</span>
+                        </div>
+                        <div class="timeline-content-box" th:utext="${r.content}">content</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty" th:if="${(triageRecords == null or #lists.isEmpty(triageRecords)) and (patientReports == null or #lists.isEmpty(patientReports))}">
+                No history found for this patient.
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

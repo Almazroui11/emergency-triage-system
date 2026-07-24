@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SMS Notifications</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+</head>
+
+<body data-theme="light">
+<div class="app-shell">
+
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+
+        <div class="top-card">
+            <div class="top-card-left">
+                <div class="top-text">
+                    <h1>SMS Notifications</h1>
+                    <p></p>
+                </div>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden"
+                       th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        </div>
+
+        <section class="card">
+            <h3 class="card-title">Sent SMS Logs</h3>
+            <p class="card-sub"></p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Sent At</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="s : ${smsLogs}">
+                        <td th:text="${s.id}">1</td>
+                        <td th:text="${s.patientName}">Patient</td>
+                        <td th:text="${s.phoneNumber}">96800000000</td>
+                        <td th:text="${s.type}">TYPE</td>
+                        <td th:text="${s.message}">Message</td>
+                        <td>
+                            <span class="badge green">SENT</span>
+                        </td>
+                        <td th:text="${s.sentAt}">Time</td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(smsLogs)}">
+                        <td colspan="7" class="empty">No SMS logs found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<div th:fragment="sidebar">
+    <aside class="sidebar">
+        <div class="sidebar-logo"></div>
+
+        <nav class="sidebar-nav">
+            <a class="side-link" href="/dashboard"
+               th:if="${#authorization.expression('hasAnyRole(''DOCTOR'',''NURSE'')')}"
+               title="Dashboard">⌂</a>
+
+            <a class="side-link" href="/patients"
+               th:if="${#authorization.expression('hasAnyRole(''DOCTOR'',''NURSE'')')}"
+               title="Patients">👥</a>
+
+            <a class="side-link" href="/queue"
+               th:if="${#authorization.expression('hasAnyRole(''DOCTOR'',''NURSE'')')}"
+               title="Queue">☰</a>
+
+            <a class="side-link" href="/reports"
+               th:if="${#authorization.expression('hasRole(''NURSE'')')}"
+               title="Reports">📄</a>
+
+            <a class="side-link" href="/doctor-reports"
+               th:if="${#authorization.expression('hasRole(''DOCTOR'')')}"
+               title="Doctor Reports">📋</a>
+
+            <a class="side-link" href="/sms"
+               th:if="${#authorization.expression('hasAnyRole(''DOCTOR'',''NURSE'')')}"
+               title="SMS">✉</a>
+
+            <a class="side-link" href="/users"
+               th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+               title="Users">👤</a>
+
+            <a class="side-link" href="/settings"
+               th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''DOCTOR'',''NURSE'')')}"
+               title="Settings">⚙</a>
+        </nav>
+    </aside>
+</div>

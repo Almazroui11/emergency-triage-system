@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+	<div th:replace="sidebar :: sidebar"></div>
+
+  <main class="main-area">
+    <div class="topbar">
+      <div class="topbar-title">
+        <h1>Analytics</h1>
+        <p>Patient category and system statistics</p>
+      </div>
+
+      <div class="topbar-right">
+        <form th:action="@{/logout}" method="post">
+          <button class="logout-btn" type="submit">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="page-grid grid-4">
+      <div class="card metric-card">
+        <div class="metric-text">
+          <h3>Total Patients</h3>
+          <div class="num" th:text="${totalPatients}">0</div>
+        </div>
+        <div class="metric-icon bg-blue">👥</div>
+      </div>
+
+      <div class="card metric-card">
+        <div class="metric-text">
+          <h3>RED</h3>
+          <div class="num" th:text="${redCount}">0</div>
+        </div>
+        <div class="metric-icon bg-red">!</div>
+      </div>
+
+      <div class="card metric-card">
+        <div class="metric-text">
+          <h3>YELLOW</h3>
+          <div class="num" th:text="${yellowCount}">0</div>
+        </div>
+        <div class="metric-icon bg-orange">⏳</div>
+      </div>
+
+      <div class="card metric-card">
+        <div class="metric-text">
+          <h3>GREEN</h3>
+          <div class="num" th:text="${greenCount}">0</div>
+        </div>
+        <div class="metric-icon bg-green">✓</div>
+      </div>
+    </div>
+
+    <div class="page-grid grid-2" style="margin-top:20px;">
+      <section class="card">
+        <h2 class="section-title">Category Summary</h2>
+        <p class="section-sub">Quick overview of triage distribution</p>
+
+        <div style="margin-top:18px; display:grid; gap:14px;">
+          <div class="info-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge badge-red">RED</span>
+              <strong th:text="${redCount}">0</strong>
+            </div>
+          </div>
+
+          <div class="info-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge badge-yellow">YELLOW</span>
+              <strong th:text="${yellowCount}">0</strong>
+            </div>
+          </div>
+
+          <div class="info-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="badge badge-green">GREEN</span>
+              <strong th:text="${greenCount}">0</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Notes</h2>
+        <p class="section-sub">How to read the analytics</p>
+
+        <div class="info-panel" style="margin-top:18px;">
+          <div class="info-list">
+            <div>RED = critical cases needing immediate attention</div>
+            <div>YELLOW = urgent cases but not the highest priority</div>
+            <div>GREEN = normal or less urgent cases</div>
+            <div>Total Patients shows all registered patients in the system</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

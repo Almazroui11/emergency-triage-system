@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New Patient</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<script th:src="@{/js/i18n.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+</head>
+
+<body data-theme="light">
+	<div class="app-shell">
+
+		<div th:replace="sidebar :: sidebar"></div>
+		<main class="main-wrap">
+			<div class="top-card" style="justify-content:flex-end;">
+				<form th:action="@{/logout}" method="post">
+					<input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+					<button class="logout-btn" type="submit">Logout</button>
+				</form>
+			</div>
+
+			<section class="card">
+				<h3 class="card-title">New Patient</h3>
+				<p class="card-sub">Enter patient details then click Save.</p>
+
+				<form th:action="@{/patients}" method="post" th:object="${patient}" style="margin-top:18px;">
+					<input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+
+					<div class="form-grid">
+						<div class="field">
+							<label>Full Name</label>
+							<input th:field="*{fullName}" placeholder="e.g., Ahmed Ali" required>
+						</div>
+
+						<div class="field">
+							<label>National ID</label>
+							<input th:field="*{nationalId}" placeholder="e.g., 12345678">
+						</div>
+
+						<div class="field">
+							<label>Age</label>
+							<input type="number" th:field="*{age}" min="0" placeholder="e.g., 25">
+						</div>
+
+						<div class="field">
+							<label>Gender</label>
+							<select th:field="*{gender}">
+								<option value="">Select</option>
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+							</select>
+						</div>
+
+						<div class="field full">
+							<label>Complaint</label>
+							<textarea th:field="*{complaint}" placeholder="Short complaint description..."></textarea>
+						</div>
+					</div>
+
+					<div class="action-row" style="margin-top:18px;">
+						<button class="btn primary" type="submit">Save</button>
+						<a class="btn" th:href="@{/patients}">Back</a>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

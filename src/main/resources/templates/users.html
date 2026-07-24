@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Users</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<script th:src="@{/js/i18n.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+</head>
+
+<body data-theme="light">
+	<div class="app-shell">
+
+		<div th:replace="sidebar :: sidebar"></div>
+
+		<main class="main-wrap">
+			<div class="top-card" style="justify-content:flex-end;">
+				<form th:action="@{/logout}" method="post">
+					<input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+					<button class="logout-btn" type="submit" data-i18n="logout">Logout</button>
+				</form>
+			</div>
+
+			<div class="grid-2">
+				<section class="card">
+					<h3 class="card-title" data-i18n="users">Users</h3>
+					<p class="card-sub" data-i18n="systemUsers">System users</p>
+
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th data-i18n="id">ID</th>
+									<th data-i18n="username">Username</th>
+									<th data-i18n="role">Role</th>
+									<th data-i18n="enabled">Enabled</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="u : ${users}">
+									<td th:text="${u.id}">1</td>
+									<td th:text="${u.username}">admin</td>
+									<td th:text="${u.role}">ADMIN</td>
+									<td th:text="${u.enabled}">true</td>
+								</tr>
+								<tr th:if="${#lists.isEmpty(users)}">
+									<td colspan="4" class="empty" data-i18n="noUsersFound">No users found.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+				<section class="card">
+					<h3 class="card-title" data-i18n="pendingRequests">Pending Requests</h3>
+					<p class="card-sub" data-i18n="waitingApproval">Waiting approval</p>
+
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th data-i18n="id">ID</th>
+									<th data-i18n="username">Username</th>
+									<th data-i18n="email">Email</th>
+									<th data-i18n="role">Role</th>
+									<th data-i18n="actions">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="p : ${pendingUsers}">
+									<td th:text="${p.id}">1</td>
+									<td th:text="${p.username}">user</td>
+									<td th:text="${p.email}">email@test.com</td>
+									<td th:text="${p.requestedRole}">NURSE</td>
+									<td>
+										<div class="action-row">
+											<form th:action="@{'/users/pending/' + ${p.id} + '/approve'}" method="post">
+												<input type="hidden"
+													th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+													th:value="${_csrf != null ? _csrf.token : ''}">
+												<button class="btn primary" type="submit"
+													data-i18n="approve">Approve</button>
+											</form>
+
+											<form th:action="@{'/users/pending/' + ${p.id} + '/reject'}" method="post">
+												<input type="hidden"
+													th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+													th:value="${_csrf != null ? _csrf.token : ''}">
+												<button class="btn danger" type="submit"
+													data-i18n="reject">Reject</button>
+											</form>
+										</div>
+									</td>
+								</tr>
+
+								<tr th:if="${#lists.isEmpty(pendingUsers)}">
+									<td colspan="5" class="empty" data-i18n="noPendingRequests">No pending requests.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</div>
+		</main>
+	</div>
+</body>
+
+</html>

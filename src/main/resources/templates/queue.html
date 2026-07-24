@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+        <div class="top-card">
+            <div class="top-card-left"></div>
+
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit" data-i18n="logout">Logout</button>
+            </form>
+        </div>
+
+        <section class="card">
+            <h3 class="card-title" data-i18n="queue">Queue</h3>
+            <p class="card-sub" data-i18n="queueSubtitle">Patients waiting after triage</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th data-i18n="id">ID</th>
+                        <th data-i18n="code">Code</th>
+                        <th data-i18n="name">Name</th>
+                        <th data-i18n="category">Category</th>
+                        <th data-i18n="arrival">Arrival</th>
+                        <th>Waiting Time</th>
+                        <th>Estimated Wait</th>
+                        <th data-i18n="actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${patients}">
+                        <td th:text="${p.id}">1</td>
+                        <td th:text="${p.patientCode}">P-001</td>
+                        <td th:text="${p.fullName}">Patient</td>
+                        <td>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'RED')}" class="badge red">RED</span>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'YELLOW')}" class="badge yellow">YELLOW</span>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'GREEN')}" class="badge green">GREEN</span>
+                            <span th:if="${p.category == null or p.category == ''}" class="badge">-</span>
+                        </td>
+                        <td th:text="${p.arrivalTime}">Time</td>
+                        <td th:text="${p.waitingTimeText}">10 min</td>
+                        <td th:text="${p.estimatedWaitText}">0 - 5 min</td>
+                        <td>
+                            <div class="action-row">
+                                <a class="btn" th:href="@{'/triage/' + ${p.id}}" data-i18n="triage">Triage</a>
+
+                                <form th:action="@{'/queue/' + ${p.id} + '/done'}" method="post" style="display:inline;">
+                                    <input type="hidden"
+                                           th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                                           th:value="${_csrf != null ? _csrf.token : ''}">
+                                    <button class="btn primary" type="submit">Archive</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(patients)}">
+                        <td colspan="8" class="empty" data-i18n="noWaitingPatients">No waiting patients.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top:24px;">
+            <h3 class="card-title">Archived Patients</h3>
+            <p class="card-sub">Patients who have been treated and archived</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Arrival</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${archivedPatients}">
+                        <td th:text="${p.id}">1</td>
+                        <td th:text="${p.patientCode}">P-001</td>
+                        <td th:text="${p.fullName}">Patient</td>
+                        <td>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'RED')}" class="badge red">RED</span>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'YELLOW')}" class="badge yellow">YELLOW</span>
+                            <span th:if="${#strings.equalsIgnoreCase(p.category,'GREEN')}" class="badge green">GREEN</span>
+                            <span th:if="${p.category == null or p.category == ''}" class="badge">-</span>
+                        </td>
+                        <td th:text="${p.arrivalTime}">Time</td>
+                        <td th:text="${p.status}">Archived</td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(archivedPatients)}">
+                        <td colspan="6" class="empty">No archived patients yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="landing-body">
+<section class="landing-page">
+    <div class="landing-overlay"></div>
+
+    <div class="landing-content" style="justify-content:center;">
+        <div class="login-card">
+            <h1>Login</h1>
+
+            <form method="post" th:action="@{/login}">
+                <div class="field">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Enter username" required>
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter password" required>
+                </div>
+
+                <div class="login-actions">
+                    <button class="btn primary" type="submit">Login</button>
+                    <a th:href="@{/register}" class="btn light">Create new account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="landing-wave">
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none">
+            <path fill="#ffffff" d="M0,160L60,154.7C120,149,240,139,360,138.7C480,139,600,149,720,154.7C840,160,960,160,1080,144C1200,128,1320,96,1380,80L1440,64L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+    </div>
+</section>
+</body>
+</html>

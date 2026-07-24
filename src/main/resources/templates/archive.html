@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <script th:src="@{/js/i18n.js}"></script>
+  <script th:src="@{/js/settings.js}"></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+
+<div th:replace="sidebar :: sidebar"></div>
+
+  <main class="main-wrap">
+    <div class="top-card" style="justify-content:flex-end;">
+      <form th:action="@{/logout}" method="post">
+        <input type="hidden"
+               th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+               th:value="${_csrf != null ? _csrf.token : ''}">
+        <button class="logout-btn" type="submit">Logout</button>
+      </form>
+    </div>
+
+    <section class="card">
+      <h3 class="card-title">Archive</h3>
+      <p class="card-sub">Patient records list</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Category</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="p : ${patients}">
+            <td th:text="${p.id}">1</td>
+            <td th:text="${p.patientCode}">P-001</td>
+            <td th:text="${p.fullName}">Name</td>
+            <td th:text="${p.status}">Waiting</td>
+            <td th:text="${p.category}">GREEN</td>
+          </tr>
+
+          <tr th:if="${#lists.isEmpty(patients)}">
+            <td colspan="5" class="empty">No archived records.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

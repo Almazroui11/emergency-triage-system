@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Triage</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<script th:src="@{/js/i18n.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+</head>
+
+<body data-theme="light">
+	<div class="app-shell">
+
+		<div th:replace="sidebar :: sidebar"></div>
+
+		<main class="main-wrap">
+
+			<div class="top-card" style="justify-content:flex-end;">
+				<form th:action="@{/logout}" method="post">
+					<input type="hidden"
+						th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+						th:value="${_csrf != null ? _csrf.token : ''}">
+					<button class="logout-btn" type="submit">Logout</button>
+				</form>
+			</div>
+
+			<div class="grid-2">
+
+				<section class="card">
+					<h3 class="card-title">Triage Patient</h3>
+					<p class="card-sub" th:text="${patient.patientCode}">P-001</p>
+
+					<div class="field" style="margin-top:18px;">
+						<label>Patient</label>
+						<input type="text" th:value="${patient.fullName}" readonly>
+					</div>
+
+					<div class="field" style="margin-top:18px;">
+						<label>Age</label>
+						<input type="text" th:value="${patient.age}" readonly>
+					</div>
+
+					<form method="post" th:action="@{'/triage/' + ${patient.id}}" style="margin-top:18px;">
+
+						<input type="hidden"
+							th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+							th:value="${_csrf != null ? _csrf.token : ''}">
+
+						<div class="field">
+							<label>Smart Symptoms</label>
+
+							<div class="symptoms-grid">
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Bleeding">
+									<span>Bleeding</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Unconscious">
+									<span>Unconscious</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Chest Pain">
+									<span>Chest Pain</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Shortness of Breath">
+									<span>Shortness of Breath</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Fracture">
+									<span>Fracture</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Fever">
+									<span>Fever</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Dizziness">
+									<span>Dizziness</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Vomiting">
+									<span>Vomiting</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Severe Pain">
+									<span>Severe Pain</span>
+								</label>
+
+								<label class="symptom-item">
+									<input type="checkbox" name="symptoms" value="Headache">
+									<span>Headache</span>
+								</label>
+
+							</div>
+						</div>
+
+						<div class="field" style="margin-top:18px;">
+							<label>Notes</label>
+							<textarea name="notes"></textarea>
+						</div>
+
+						<div class="action-row" style="margin-top:18px;">
+							<button class="btn primary" type="submit">Save Triage</button>
+							<a class="btn" th:href="@{'/patients/' + ${patient.id}}">Back</a>
+						</div>
+
+					</form>
+				</section>
+
+				<section class="card">
+					<h3 class="card-title">Rules Preview</h3>
+					<p class="card-sub">Auto classify</p>
+
+					<div class="rule-box red-box">
+						Bleeding / Unconscious / Chest Pain / Shortness of Breath → RED
+					</div>
+
+					<div class="rule-box yellow-box">
+						Fracture / Fever / Severe Pain / Age &gt; 65 → YELLOW
+					</div>
+
+					<div class="rule-box green-box">
+						Other → GREEN
+					</div>
+
+					<p class="note-text">
+						After saving, patient will appear in Queue as Waiting and waiting time will start automatically.
+					</p>
+
+				</section>
+
+			</div>
+
+		</main>
+	</div>
+</body>
+
+</html>

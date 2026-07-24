@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/i18n.js}"></script>
+    <script th:src="@{/js/settings.js}"></script>
+    <script th:src="@{/js/reports.js}" defer></script>
+</head>
+<body data-theme="light">
+<div class="app-shell">
+    <div th:replace="sidebar :: sidebar"></div>
+
+    <main class="main-wrap">
+        <div class="top-card">
+            <div class="top-card-left"></div>
+
+            <form th:action="@{/logout}" method="post">
+                <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                       th:value="${_csrf != null ? _csrf.token : ''}">
+                <button class="logout-btn" type="submit" data-i18n="logout">Logout</button>
+            </form>
+        </div>
+
+        <div class="grid-2">
+            <section class="card">
+                <h3 class="card-title" data-i18n="createReport">Create Report</h3>
+                <p class="card-sub" data-i18n="writeSavePatientReport"></p>
+
+                <form th:action="@{/reports/save}" method="post" style="margin-top:18px;" onsubmit="prepareReportContent()">
+                    <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : '_csrf'}"
+                           th:value="${_csrf != null ? _csrf.token : ''}">
+
+                    <div class="field">
+                        <label data-i18n="patient">Patient</label>
+                        <select name="patientId" id="reportPatientSelect" required>
+                            <option value="" selected disabled data-i18n="selectPatient">Select patient</option>
+                            <option th:each="p : ${patients}" th:value="${p.id}" th:text="${p.fullName + ' (ID: ' + p.id + ')'}">Patient</option>
+                        </select>
+                    </div>
+
+                    <div class="field" style="margin-top:18px;">
+                        <label data-i18n="content">Content</label>
+
+                        <div class="editor-toolbar">
+                            <select id="fontName" class="tool">
+                                <option value="Arial">Arial</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+
+                            <select id="fontSize" class="tool">
+                                <option value="2" data-i18n="small">Small</option>
+                                <option value="3" selected data-i18n="normal">Normal</option>
+                                <option value="4" data-i18n="large">Large</option>
+                                <option value="5" data-i18n="xLarge">X-Large</option>
+                            </select>
+
+                            <input id="fontColor" class="tool" type="color" value="#000000">
+
+                            <button type="button" class="tool-btn" onclick="cmd('bold')"><b>B</b></button>
+                            <button type="button" class="tool-btn" onclick="cmd('italic')"><i>I</i></button>
+                            <button type="button" class="tool-btn" onclick="cmd('underline')"><u>U</u></button>
+                            <button type="button" class="tool-btn" onclick="cmd('insertUnorderedList')">• List</button>
+                            <button type="button" class="tool-btn" onclick="cmd('insertOrderedList')">1. List</button>
+                        </div>
+
+                        <div id="reportEditor" class="editor-area" contenteditable="true"></div>
+                        <input type="hidden" name="content" id="contentHidden">
+                    </div>
+
+                    <div class="action-row" style="margin-top:18px;">
+                        <button type="submit" class="btn primary" data-i18n="save">Save</button>
+                        <button type="button" class="btn" onclick="printEditor()" data-i18n="print">Print</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="card reports">
+                <h3 class="card-title" data-i18n="savedReports">Saved Reports</h3>
+                <p class="card-sub" data-i18n="clickArrowToShowReportDetails"></p>
+
+                <div class="reports-accordion">
+                    <div class="report-item" th:each="r : ${reports}">
+                        <div class="report-head" th:attr="data-id=${r.id}" onclick="toggleReport(this)">
+                            <div class="report-head-left">
+                                <span class="report-patient-name" th:text="${r.patient != null ? r.patient.fullName : 'Patient Name'}">Patient Name</span>
+                            </div>
+                            <button type="button" class="report-arrow">⌄</button>
+                        </div>
+
+                        <div class="report-body" th:attr="id='report-body-' + ${r.id}"></div>
+                    </div>
+                </div>
+
+                <div class="empty" th:if="${#lists.isEmpty(reports)}">No saved reports found.</div>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
